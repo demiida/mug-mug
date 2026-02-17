@@ -68,11 +68,11 @@
     set text(font: if type(text-font) == dictionary { text-font.gothic } else { text-font })
     it
   }
-  set par(justify: true, spacing: 10.5pt)
-
-  if first-line-indent {
-    set par(first-line-indent: (amount: 1em, all: true))
-  }
+  set par(
+    justify: true,
+    spacing: 10.5pt,
+    first-line-indent: if first-line-indent { (amount: 1em, all: true) } else { 0em },
+  )
 
   // 数式
   show math.equation: set text(font: equation-font)
