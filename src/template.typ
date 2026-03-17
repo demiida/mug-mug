@@ -55,16 +55,36 @@
   ))
 }
 
-// 付録などで章の numbering を変えたときに使う
-#let set-numbering(document, section-numbering: "1") = {
-  set math.equation(numbering: (..args) => {
-    let section = numbering(section-numbering, counter(heading).get().first())
-    "(" + (section, args.pos()).flatten().map(str).join([--]) + ")"
-  })
-  set figure(numbering: (..args) => {
-    let section = numbering(section-numbering, counter(heading).get().first())
-    (section, args.pos()).flatten().map(str).join([--])
-  })
+// `heading` の `numbering` を設定したあとに使う
+// ```
+// #set heading(numbering: "1.")
+// #show: set-numbering("1")
+// ```
+#let set-numbering(
+  section-numbering,
+  figure-kinds: (image, table, raw),
+) = document => {
+  // 章が変わったとき、数式・図表の番号をリセット
+  let counter-keys = (math.equation, figure-kinds.map(kind => figure.where(kind: kind))).flatten()
+  show heading.where(level: 1): it => it + for key in counter-keys { counter(key).update(0) }
+
+  let get-section-number() = {
+    let section-number = counter(heading).get().first()
+    numbering(section-numbering, section-number)
+  }
+  let get-numbers(..args) = {
+    let section-number = get-section-number()
+    let numbers = args.pos().map(str)
+    if section-number == none {
+      numbers.join([--])
+    } else {
+      (section-number, numbers).flatten().join([--])
+    }
+  }
+
+  set math.equation(numbering: (..args) => "(" + get-numbers(..args) + ")")
+  set figure(numbering: get-numbers)
+
   document
 }
 
@@ -95,19 +115,6 @@
   show regex("[、。，．]"): it => it + h(0pt, weak: true)
   show regex("[（「]"): it => h(-0.25em, weak: true) + it
   show regex("[）」]"): it => it + h(-0.25em, weak: true)
-
-  // 章が変わったとき、数式・図表の番号をリセット
-  show heading.where(level: 1): it => {
-    it
-    for key in (
-      math.equation,
-      (image, table, raw).map(kind => figure.where(kind: kind)),
-    ).flatten() {
-      counter(key).update(0)
-    }
-  }
-
-  show: set-numbering
 
   // 数式
   show math.equation: set text(font: equation-font)
