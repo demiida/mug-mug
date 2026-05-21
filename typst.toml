@@ -1,4 +1,4 @@
 [package]
-name = "basic-template"
-version = "0.2.0"
+name = "mug-mug"
+version = "0.3.0"
 entrypoint = "src/template.typ"
