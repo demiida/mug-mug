@@ -33,26 +33,29 @@
 
 // 装飾
 #let wrap-rect(body, header: none, ..args) = {
-  align(center, context rect(
-    width: 100% + measure(counter(math.equation).display()).width,
-    inset: 1em,
-    align(left, {
-      parbreak()
-      if header != none {
-        h(
-          if type(par.first-line-indent) == dictionary {
-            -par.first-line-indent.amount
-          } else {
-            -par.first-line-indent
-          },
-        )
-        strong(header)
-        h(1em, weak: true)
-      }
-      body
-    }),
-    ..args,
-  ))
+  align(
+    center,
+    context rect(
+      width: 100% + measure(counter(math.equation).display()).width,
+      inset: 1em,
+      align(left, {
+        parbreak()
+        if header != none {
+          h(
+            if type(par.first-line-indent) == dictionary {
+              -par.first-line-indent.amount
+            } else {
+              -par.first-line-indent
+            },
+          )
+          strong(header)
+          h(1em, weak: true)
+        }
+        body
+      }),
+      ..args,
+    ),
+  )
 }
 
 // `heading` の `numbering` を設定したあとに使う
@@ -95,12 +98,11 @@
     mincho: "Yu Mincho",
   ),
   equation-font: "Cambria Math",
-  text-size: 10.5pt,
+  raw-font: "UDEV Gothic NF",
   first-line-indent: true,
 ) = {
   set text(
     lang: "ja",
-    size: text-size,
     font: if type(text-font) == dictionary { text-font.mincho } else { text-font },
   )
   show (strong, heading, title).reduce(selector.or): set text(
@@ -120,7 +122,7 @@
   show math.equation: set text(font: equation-font)
 
   // ソースコード
-  show raw: set text(font: "UDEV Gothic NF")
+  show raw: set text(font: raw-font)
   show figure.where(kind: raw): set block(breakable: true)
 
   // 図表
