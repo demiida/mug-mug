@@ -1,9 +1,3 @@
-#import "@preview/physica:0.9.8": *
-#import "@preview/codelst:2.0.2"
-#import "@preview/pillar:0.3.3"
-#import "@preview/unify:0.7.1": *
-#import table: cell, header, hline, vline
-
 // 数式ブロックの後に使う
 #let no-parbreak = {
   context v(-par.spacing / 2, weak: true)
@@ -13,22 +7,6 @@
 // アラインメント
 #let no-indent-align(alignment, body) = {
   align(alignment, par(body, first-line-indent: 0em))
-}
-
-#let sourcecode(..args) = codelst.sourcecode(showlines: true, ..args)
-#let sourcefile(file-path, ..args) = codelst.sourcefile(read(file-path), file: file-path, showlines: true, ..args)
-
-#let dx = $dd(x)$
-#let dy = $dd(y)$
-#let dz = $dd(z)$
-#let dt = $dd(t)$
-#let df = $dd(f)$
-#let FT = $op(cal(F))$
-#let invFT = $op(cal(F)^(-1))$
-#let LT = $op(cal(L))$
-#let invLT = $op(cal(L)^(-1))$
-#let trans(A, tl-small-symbol: false) = {
-  if tl-small-symbol { $thin attach(#A, tl: t)$ } else { $#A^TT thin$ }
 }
 
 // 装飾
